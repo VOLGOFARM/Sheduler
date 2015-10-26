@@ -1,0 +1,33 @@
+program Sheduler;
+
+uses
+  Forms,
+  uMain in 'uMain.pas' {fMain},
+  uRefTask in 'uRefTask.pas' {RefTask},
+  uRepHron in 'uRepHron.pas' {fRepHron},
+  uTaskTop10 in 'uTaskTop10.pas' {fTactTop10},
+  uOtchSPP in 'uOtchSPP.pas' {fOtchSPP},
+  uOtchFIO in 'uOtchFIO.pas' {fOtchFIO},
+  uUsers in 'uUsers.pas' {sprUsers: TFrame},
+  uReference in 'uReference.pas' {frmReference},
+  uPosts in 'uPosts.pas' {sprPosts: TFrame},
+  uCurators in 'uCurators.pas' {sprCurators: TFrame},
+  uAddTask in 'uAddTask.pas' {fAddTask},
+  uSettings in 'uSettings.pas' {fSettings},
+  uDivision in 'uDivision.pas' {sprDepartments: TFrame},
+  uMovingwnd in 'uMovingwnd.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.Title := 'Планирование РВ';
+  Application.CreateForm(TfMain, fMain);
+  Application.CreateForm(TRefTask, RefTask);
+  Application.CreateForm(TfRepHron, fRepHron);
+  Application.CreateForm(TfTactTop10, fTactTop10);
+  Application.CreateForm(TfAddTask, fAddTask);
+  Application.CreateForm(TfSettings, fSettings);
+  Application.Run;
+end.

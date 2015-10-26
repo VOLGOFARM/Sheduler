@@ -1,0 +1,65 @@
+object sprDepartments: TsprDepartments
+  Left = 0
+  Top = 0
+  Width = 508
+  Height = 304
+  TabOrder = 0
+  TabStop = True
+  object DBGridEh1: TDBGridEh
+    Left = 0
+    Top = 33
+    Width = 508
+    Height = 271
+    Align = alClient
+    AutoFitColWidths = True
+    DataGrouping.GroupLevels = <>
+    DataSource = MSDataSource1
+    Flat = True
+    FooterColor = clWindow
+    FooterFont.Charset = DEFAULT_CHARSET
+    FooterFont.Color = clWindowText
+    FooterFont.Height = -11
+    FooterFont.Name = 'Tahoma'
+    FooterFont.Style = []
+    IndicatorOptions = [gioShowRowIndicatorEh]
+    OptionsEh = [dghFixed3D, dghHighlightFocus, dghClearSelection, dghIncSearch, dghPreferIncSearch, dghDblClickOptimizeColWidth, dghDialogFind, dghColumnResize, dghColumnMove]
+    TabOrder = 0
+    TitleFont.Charset = DEFAULT_CHARSET
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -11
+    TitleFont.Name = 'Tahoma'
+    TitleFont.Style = []
+    Columns = <
+      item
+        EditButtons = <>
+        FieldName = 'DepartmentName'
+        Footers = <>
+        Title.Alignment = taCenter
+        Title.Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1086#1090#1076#1077#1083#1072
+        Width = 200
+      end>
+    object RowDetailData: TRowDetailPanelControlEh
+    end
+  end
+  object DBPanel1: TDBPanel
+    Left = 0
+    Top = 0
+    Width = 508
+    Height = 33
+    Align = alTop
+    Caption = ' '
+    TabOrder = 1
+    DataSource = MSDataSource1
+  end
+  object MSTable1: TMSTable
+    TableName = 'dbo.Departments'
+    OrderFields = 'DepartmentName'
+    Left = 80
+    Top = 120
+  end
+  object MSDataSource1: TMSDataSource
+    DataSet = MSTable1
+    Left = 144
+    Top = 120
+  end
+end

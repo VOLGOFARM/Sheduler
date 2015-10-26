@@ -1,0 +1,91 @@
+unit uRepHron;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, MultiFilter, DBGridEhGrouping, DB, DBAccess, MSAccess, MemDS,
+  GridsEh, DBGridEh, Menus,DBGridEhImpExp;
+
+type
+  TfRepHron = class(TForm)
+    DBGridEh1: TDBGridEh;
+    MSQuery1: TMSQuery;
+    MSDataSource1: TMSDataSource;
+    MSQuery1ID: TIntegerField;
+    MSQuery1StartTime: TDateTimeField;
+    MSQuery1EndTime: TDateTimeField;
+    MSQuery1Deltatime: TDateTimeField;
+    MSQuery1MIN: TIntegerField;
+    MSQuery1SEC: TIntegerField;
+    MSQuery1TaskName: TStringField;
+    MSQuery1Note: TStringField;
+    MSQuery1Sender: TIntegerField;
+    MSQuery1DayTask: TDateTimeField;
+    MSQuery1UserID: TIntegerField;
+    MSQuery1UserName: TStringField;
+    MSQuery1Norm: TFloatField;
+    MSQuery1Ratio: TFloatField;
+    SaveDialog1: TSaveDialog;
+    PopupMenu1: TPopupMenu;
+    N1: TMenuItem;
+    procedure FormCreate(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
+    procedure N1Click(Sender: TObject);
+    procedure DBGridEh1TitleBtnClick(Sender: TObject; ACol: Integer;
+      Column: TColumnEh);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    MF: TMultiFilter;
+  end;
+
+var
+  fRepHron: TfRepHron;
+
+implementation
+uses
+  uMain;
+{$R *.dfm}
+
+procedure TfRepHron.DBGridEh1TitleBtnClick(Sender: TObject; ACol: Integer;
+  Column: TColumnEh);
+begin
+  MSQuery1.Close;
+  MSQuery1.SQL.Add('');
+  MSQuery1.Open;
+end;
+
+procedure TfRepHron.FormActivate(Sender: TObject);
+begin
+  MSQuery1.Connection := fMain.msCon;
+  if fMain.msCon.Connected then begin
+    if MSQuery1.Active then MSQuery1.Refresh else MSQuery1.Open;
+  end;
+end;
+
+procedure TfRepHron.FormCreate(Sender: TObject);
+begin
+  if not Assigned(mf) then begin
+    MF := TMultiFilter.Create(fRepHron);
+    with mf do begin
+      Parent := fRepHron;
+      MF.DS := MSQuery1;
+      MF.Grid := DBGridEh1;
+    end;
+  end;
+end;
+
+procedure TfRepHron.N1Click(Sender: TObject);
+var
+  Path:String;
+begin
+  if SaveDialog1.Execute then
+    begin
+      Path := SaveDialog1.FileName + '.xls';
+      SaveDBGridEhToExportFile(TDBGridEhExportAsXLS, DBGridEh1, Path, True);
+    end;
+end;
+
+end.

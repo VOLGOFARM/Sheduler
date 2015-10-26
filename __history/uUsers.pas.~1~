@@ -1,0 +1,68 @@
+unit frameUsers;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, 
+  Dialogs, DB, DBAccess, MSAccess, MemDS, Grids, DBGridEh, GridsEh, StdCtrls,
+  ExtCtrls, DimTB;
+
+type
+  TsprUsers = class(TFrame)
+    DBGridEh1: TDBGridEh;
+    Departments: TMSTable;
+    Posts: TMSTable;
+    MSQuery1: TMSQuery;
+    MSDataSource1: TMSDataSource;
+    MSQuery1UserID: TIntegerField;
+    MSQuery1UserName: TStringField;
+    MSQuery1DepartmentID: TIntegerField;
+    MSQuery1PostID: TIntegerField;
+    MSQuery1DepartmentName: TStringField;
+    MSQuery1PostName: TStringField;
+    MSQuery1controller: TBooleanField;
+    Button1: TButton;
+    Edit1: TEdit;
+    DBPanel1: TDBPanel;
+    procedure FrameResize(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+implementation
+
+{$R *.dfm}
+uses Unit1;
+
+procedure TsprUsers.Button1Click(Sender: TObject);
+var
+  MSQ : TMSQuery;
+begin
+  MSQ:=TMSQuery.Create(Nil);
+  MSQ.Connection := frmMain.MSConnection1;
+
+  MSQ.Close;
+  MSQ.SQL.Clear;
+  MSQ.SQL.Add('select USER_ID('''+Edit1.Text+''') as UserId');
+  MSQ.Open;
+
+  Edit1.Text:=MSQ.FieldByName('UserId').AsString;
+
+  MSQ.Close;
+  MSQ.Free;
+
+
+
+end;
+
+procedure TsprUsers.FrameResize(Sender: TObject);
+begin
+  Edit1.Top:=35;
+  Button1.Top := 35;
+  DBGridEh1.Height := Height-60;
+end;
+
+end.

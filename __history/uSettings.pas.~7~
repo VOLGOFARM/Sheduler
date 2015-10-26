@@ -1,0 +1,46 @@
+unit uSettings;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, DB, MemDS, DBAccess, MSAccess;
+
+type
+  TfSettings = class(TForm)
+    Button1: TButton;
+    btCancel: TButton;
+    CheckBox1: TCheckBox;
+    procedure btCancelClick(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    procedure GetParam;
+  end;
+
+var
+  fSettings: TfSettings;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfSettings.btCancelClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TfSettings.FormActivate(Sender: TObject);
+begin
+  GetParam;
+end;
+
+procedure TfSettings.GetParam;
+begin
+
+
+end;
+
+end.

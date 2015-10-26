@@ -1,0 +1,338 @@
+unit uOtchFIO;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, GridsEh, DBGridEh, MSAccess, StdCtrls, DB, DBAccess, Mask, DBCtrlsEh,
+  DBLookupEh, MemDS, ComCtrls, frxClass, frxDBSet,DBGridEhImpExp, Menus,
+  frxExportXLS, frxExportXML, frxExportPDF, frxGZip, frxDesgn, frxCross,
+  frxExportTXT, frxExportText, frxExportCSV;
+
+type
+  TfOtchFIO = class(TForm)
+    frxReport1: TfrxReport;
+    frxDBDataset1: TfrxDBDataset;
+    MSQuery1: TMSQuery;
+    MSQuery1TaskID: TIntegerField;
+    MSQuery1TaskName: TStringField;
+    MSQuery1DeltaSec: TIntegerField;
+    MSQuery1Time: TStringField;
+    MSQuery1QuotaInAll: TFloatField;
+    MSQuery1UserID: TIntegerField;
+    MSQuery1DayTask: TDateTimeField;
+    MSQuery1StartTime: TDateTimeField;
+    MSQuery1EndTime: TDateTimeField;
+    MSQuery1Note: TStringField;
+    MSQuery1UserName: TStringField;
+    MSQuery1StartD: TDateTimeField;
+    MSQuery1EndD: TDateTimeField;
+    MSQuery1TimeAll: TStringField;
+    MSQuery1RowNumber: TLargeintField;
+    PopupMenu1: TPopupMenu;
+    DspheprfdEXCEL1: TMenuItem;
+    SaveDialog1: TSaveDialog;
+    frxPDFExport1: TfrxPDFExport;
+    frxXMLExport1: TfrxXMLExport;
+    frxReport6: TfrxReport;
+    frxDBDataset4: TfrxDBDataset;
+    MSQuery4: TMSQuery;
+    procedure DspheprfdEXCEL1Click(Sender: TObject);
+    procedure DBLookupComboboxEh1Change(Sender: TObject);
+    procedure FormResize(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure DBLookUpOnChange(Sender: TObject);
+    procedure ButOnClick(Sender: TObject);
+    procedure But2OnClick(Sender: TObject);
+    procedure DblButClick(Sender: TObject);
+    procedure TitButClick(Sender: TObject; ACol: Integer; Column: TColumnEh);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    MSQString: String;
+  end;
+
+var
+  fOtchFIO: TfOtchFIO;
+  MSQ: TMSQuery;
+  MSQ2: TMSQuery;
+  MSDS: TMSDataSource;
+  MSDS2: TMSDataSource;
+  DBGrid: TDBGridEh;
+  USERID: Integer;
+  DTPicker1: TDateTimePicker;
+  DTPicker2: TDateTimePicker;
+  DBLookup: TDBLookupComboboxEh;
+  But: TButton;
+  But2: TButton;
+
+implementation
+
+{$R *.dfm}
+
+uses uMain;
+
+procedure TfOtchFIO.But2OnClick(Sender: TObject);
+begin
+  with MSQuery4 do begin
+    Close;
+    ParamByName('SDate').AsDateTime := DTPicker1.DateTime;
+    ParamByName('EDate').AsDateTime := DTPicker2.DateTime;
+    ParamByName('UID').AsInteger := USERID;
+    Open;
+  end;
+  frxDBDataset4.Open;
+  frxReport6.ShowReport;
+end;
+
+procedure TfOtchFIO.ButOnClick(Sender: TObject);
+begin
+  MSQ.Connection:=fMain.MSCon;
+  MSQ.Close;
+  MSQ.SQL.Clear;
+  MSQ.SQL.Add(' SELECT * FROM dbo.funcWorkTimeAll(:CurUs, :StartD, :EndD) ');
+  MSQ.SQL.Add(' ORDER BY TaskName ');
+  MSQ.ParamByName('CurUs').AsInteger   := USERID;
+  MSQ.ParamByName('StartD').AsDateTime := DTPicker1.DateTime;
+  MSQ.ParamByName('EndD').AsDateTime   := DTPicker2.DateTime;
+  MSQ.Open;
+end;
+
+procedure TfOtchFIO.DblButClick(Sender: TObject);
+begin
+  MSQuery1.Close;
+  MSQuery1.ParamByName('UserID').AsInteger := USERID;
+  MSQuery1.ParamByName('StartD').AsDateTime := DTPicker1.DateTime;
+  MSQuery1.ParamByName('EndD').AsDateTime := DTPicker2.DateTime;
+  MSQuery1.ParamByName('TaskID').AsInteger := MSQ.FieldByName('TaskId').AsInteger;
+  MSQuery1.Open;
+  frxReport1.ShowReport;
+end;
+
+procedure TfOtchFIO.DBLookupComboboxEh1Change(Sender: TObject);
+begin
+  USERID := MSQ2.FieldByName('UserId').AsInteger;
+end;
+
+procedure TfOtchFIO.DBLookUpOnChange(Sender: TObject);
+begin
+  USERID := MSQ2.FieldByName('UserId').AsInteger;
+end;
+
+procedure TfOtchFIO.DspheprfdEXCEL1Click(Sender: TObject);
+begin
+  if SaveDialog1.Execute then begin
+    SaveDBGridEhToExportFile(TDBGridEhExportAsXLS, DBGrid, SaveDialog1.FileName+'.xls', True);
+  end;
+end;
+
+procedure TfOtchFIO.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Hide;
+  Free;
+end;
+
+procedure TfOtchFIO.FormCreate(Sender: TObject);
+begin
+  MSQ2 := TMSQuery.Create(nil);
+  MSQ2.Connection:=fMain.MSCon;
+  MSQ2.Close;
+  MSQ2.SQL.Clear;
+
+  MSQ2.SQL.Add(' SELECT UserID, UserName ');
+  MSQ2.SQL.Add(' FROM USERS ');
+  MSQ2.SQL.Add(' WHERE ');
+  MSQ2.SQL.Add(' (DepartmentID = (Select DepartmentID From Users    where UserId = User_Id()) or ');
+  MSQ2.SQL.Add(' DepartmentID in (Select DepartmentID From Curators where UserId = User_Id())) ');
+
+  MSDS2 := TMSDataSource.Create(Nil);
+  MSDS2.DataSet := MSQ2;
+  //4
+  But := Tbutton.Create(Self);
+  With But do begin
+    Parent:=Self;
+    Width  := 124;
+    Height := 21;
+    Left   := 347;
+    Top    := 5;
+    Caption := 'По ФИО за период';
+    OnClick := ButOnClick;
+  end;
+  //5
+  But2 := Tbutton.Create(Self);
+  With But2 do begin
+    Parent:=Self;
+    Width  := 170;
+    Height := 21;
+    Left   := 477;
+    Top    := 5;
+    Caption := 'По ФИО за период по дням';
+    OnClick := But2OnClick;
+  end;
+  //1
+  DBLookup:= TDBLookupComboboxEh.Create(Self);
+  With DBLookup do begin
+    Parent := Self;
+    Left:=5;
+    Top:=5;
+    Width:=104;
+    Height:=21;
+    ListSource:=MSDS2;
+    ListField := 'UserName';
+    KeyField := 'UserId';
+    OnChange := DBLookUpOnChange;
+  end;
+  //2
+  DTPicker1 := TDateTimePicker.Create(Self);
+  With DTPicker1 do begin
+    Parent := Self;
+    Left:=119;
+    Top:=5;
+    Width:=104;
+    Height:=21;
+    Date:=Date-30;
+    Time := 0;
+
+  end;
+  //3
+  DTPicker2:= TDateTimePicker.Create(Self);
+  With DTPicker2 do begin
+    Parent := Self;
+    Left:=233;
+    Top:=5;
+    Width:=104;
+    Height:=21;
+    Date:=Date;
+    Time:=StrToTime('23:59:59');
+  end;
+
+  DBGrid:=TDBGridEh.Create(self);
+  With DBGrid do begin
+    Parent := self;
+    Top := 0;
+    Left := 0;
+    OptionsEH := DBGrid.OptionsEH+[dghShowRecNo];
+    Options   := DBGrid.Options-[dgIndicator];
+    TitleLines := 3;
+    PopupMenu := PopupMenu1;
+    FooterRowCount := 1;
+    FooterColor := clSilver;
+    SumList.Active := True;
+
+    OnDblClick := DblButClick;
+    OnTitleBtnClick := TitButClick;
+  end;
+
+  MSDS := TMSDataSource.Create(Nil);
+  MSQ := TMSQuery.Create(nil);
+
+  MSQ.FieldDefs.Add('TaskName',ftString);
+  MSQ.FieldDefs[0].CreateField(MSQ);
+
+  MSQ.FieldDefs.Add('Time',ftString);
+  MSQ.FieldDefs[1].CreateField(MSQ);
+
+  MSQ.FieldDefs.Add('QuotaInAll',ftFloat);
+  MSQ.FieldDefs[2].CreateField(MSQ);
+
+  MSQ.FieldDefs.Add('UserID',ftInteger);
+  MSQ.FieldDefs[3].CreateField(MSQ);
+
+  MSQ.FieldDefs.Add('TaskID',ftInteger);
+  MSQ.FieldDefs[4].CreateField(MSQ);
+
+  MSQ.FieldDefs.Add('TimeAll',ftString);
+  MSQ.FieldDefs[5].CreateField(MSQ);
+
+  MSDS.DataSet := MSQ;
+  DBGrid.DataSource := MSDS;
+
+  DBGrid.Columns.Add.FieldName := 'TaskID';
+  DBGrid.Columns.Add.FieldName := 'TaskName';
+  DBGrid.Columns.Add.FieldName := 'Time';
+  DBGrid.Columns.Add.FieldName := 'QuotaInAll';
+
+  with DBGrid.FieldColumns['TaskID'] do begin
+    Title.Caption   := 'Код задачи';
+    Title.Alignment := taCenter;
+    Title.TitleButton := True;
+    width := 45;
+    AutoFitColWidth := False;
+  end;
+  with DBGrid.FieldColumns['TaskName'] do begin
+    Title.Caption := 'Наименование задачи';
+    Title.Alignment := taCenter;
+    Title.TitleButton := True;
+    AutoFitColWidth := True;
+  end;
+  with DBGrid.FieldColumns['Time'] do begin
+    Title.Caption   := 'Время';
+    Title.Alignment := taCenter;
+    Title.TitleButton := True;
+    width := 65;
+    AutoFitColWidth := False;
+    Footer.ValueType := fvtFieldValue;
+    Footer.FieldName := 'TimeAll';
+  end;
+  with DBGrid.FieldColumns['QuotaInAll'] do begin
+    Title.Caption := 'Доля в общем фонде рабочего времени';
+    Title.Alignment := taLeftJustify;
+    Title.TitleButton := True;
+    DisplayFormat := '#0.0';
+    width := 90;
+    AutoFitColWidth := False;
+    Footer.ValueType := fvtSum;
+    Footer.FieldName := 'QuotaInAll';
+    Footer.DisplayFormat := '#0.0';
+  end;
+
+  DBGrid.AutoFitColWidths := True;
+
+  DBGrid.Flat := True;
+
+  MSQ2.Open;
+
+  MSQuery1.Connection := fMain.msCon;
+  MSQuery4.Connection := fMain.msCon;
+
+end;
+
+procedure TfOtchFIO.FormResize(Sender: TObject);
+begin
+  DBGrid.Top := 50;
+  DBGrid.Left := 0;
+  DBGrid.Width := ClientWidth;
+  DBGrid.Height := ClientHeight-50;
+end;
+
+procedure TfOtchFIO.TitButClick(Sender: TObject; ACol: Integer;
+  Column: TColumnEh);
+begin
+  if DBGrid.FieldColumns[Column.FieldName].Title.SortMarker  = smNoneEh then
+     DBGrid.FieldColumns[Column.FieldName].Title.SortMarker := smUpEh;
+
+  if DBGrid.FieldColumns[Column.FieldName].Title.SortMarker  = smUpEh then
+     DBGrid.FieldColumns[Column.FieldName].Title.SortMarker := smDownEh else
+     DBGrid.FieldColumns[Column.FieldName].Title.SortMarker := smUpEh;
+
+  MSQ.Close;
+  MSQ.SQL.Clear;
+  MSQ.SQL.Clear;
+  MSQ.SQL.Add(' SELECT * FROM dbo.funcWorkTimeAll(:CurUs, :StartD, :EndD) ');
+
+  if DBGrid.FieldColumns[Column.FieldName].Title.SortMarker = smDownEh then
+    MSQ.SQL.Add('Order by '+Column.FieldName+' DESC');
+  if DBGrid.FieldColumns[Column.FieldName].Title.SortMarker = smUpEh then
+    MSQ.SQL.Add('Order by '+Column.FieldName+' ASC');
+
+
+  MSQ.ParamByName('CurUs').AsInteger   := USERID;
+  MSQ.ParamByName('StartD').AsDateTime := DTPicker1.DateTime;
+  MSQ.ParamByName('EndD').AsDateTime   := DTPicker2.DateTime;
+
+  MSQ.Open;
+end;
+
+end.

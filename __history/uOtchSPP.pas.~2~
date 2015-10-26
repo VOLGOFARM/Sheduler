@@ -1,0 +1,239 @@
+unit uOtchSPP;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, frxClass, frxDBSet, DB, MemDS, DBAccess, MSAccess, ComCtrls,
+  DBGridEh, StdCtrls, Mask, DBCtrlsEh, DBLookupEh, frxCross, frxExportTXT,
+  frxExportText, frxExportCSV, frxExportXML, frxExportPDF, GridsEh,
+  DBGridEhGrouping;
+
+type
+  TfrmOtchSPP = class(TForm)
+    frxReport2: TfrxReport;
+    MSQuery2: TMSQuery;
+    MSQuery2TaskID: TIntegerField;
+    MSQuery2TaskName: TStringField;
+    MSQuery2DeltaSec: TIntegerField;
+    MSQuery2QuotaInAll: TFloatField;
+    MSQuery2UserID: TIntegerField;
+    MSQuery2Time: TStringField;
+    MSQuery2UserName: TStringField;
+    frxDBDataset2: TfrxDBDataset;
+    DateTimePicker1: TDateTimePicker;
+    DateTimePicker2: TDateTimePicker;
+    DBLookupComboboxEh1: TDBLookupComboboxEh;
+    Button1: TButton;
+    frxCrossObject1: TfrxCrossObject;
+    MSQuery2DepartmentName: TStringField;
+    MSQuery2StartD: TDateTimeField;
+    MSQuery2EndD: TDateTimeField;
+    Button2: TButton;
+    frxReport1: TfrxReport;
+    frxPDFExport1: TfrxPDFExport;
+    frxXMLExport1: TfrxXMLExport;
+    frxCSVExport1: TfrxCSVExport;
+    frxSimpleTextExport1: TfrxSimpleTextExport;
+    DBGridEh1: TDBGridEh;
+    MSDataSource1: TMSDataSource;
+    MSQuery2CountAllSec: TIntegerField;
+    MSQuery2CountAllSecTime: TStringField;
+    MSQuery2CountSec: TIntegerField;
+    Button3: TButton;
+    Button4: TButton;
+    Button5: TButton;
+    MSQuery1: TMSQuery;
+    frxReport3: TfrxReport;
+    frxDBDataset1: TfrxDBDataset;
+    MSQuery1TaskID: TIntegerField;
+    MSQuery1TaskName: TStringField;
+    MSQuery1DeltaSec: TIntegerField;
+    MSQuery1QuotaInAll: TFloatField;
+    MSQuery1UserID: TIntegerField;
+    MSQuery1UserName: TStringField;
+    MSQuery1DepartmentName: TStringField;
+    MSQuery1DayTask: TDateTimeField;
+    frxReport4: TfrxReport;
+    MSQuery1StartD: TDateTimeField;
+    MSQuery1EndD: TDateTimeField;
+    MSQuery1Time: TIntegerField;
+    Button6: TButton;
+    frxReport5: TfrxReport;
+    frxDBDataset3: TfrxDBDataset;
+    MSQuery3: TMSQuery;
+    MSQuery3TaskID: TIntegerField;
+    MSQuery3TaskName: TStringField;
+    MSQuery3DeltaSec: TStringField;
+    MSQuery3CountAllSec: TStringField;
+    MSQuery3DepartmentName: TStringField;
+    MSQuery3Percent: TFloatField;
+    MSQuery3StartD: TDateTimeField;
+    MSQuery3EndD: TDateTimeField;
+    MSQuery4: TMSQuery;
+    frxDBDataset4: TfrxDBDataset;
+    frxReport6: TfrxReport;
+    procedure Button5Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure FormResize(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure DBLookupComboboxEh1Change(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmOtchSPP: TfrmOtchSPP;
+  MSQ2: TMSQuery;
+  MSDS2: TMSDataSource;
+  DEPID: Integer;
+
+implementation
+
+{$R *.dfm}
+USES uMain;
+
+procedure TfrmOtchSPP.Button1Click(Sender: TObject);
+begin
+  with MSQuery2 do begin
+    Close;
+    ParamByName('SDate').AsDateTime:=DateTimePicker1.DateTime;
+    ParamByName('EDate').AsDateTime:=DateTimePicker2.DateTime;
+    ParamByName('DepID').AsInteger:=DEPID;
+    Open;
+  end;
+  frxDBDataset2.Open;
+  frxReport2.ShowReport;
+end;
+
+procedure TfrmOtchSPP.Button2Click(Sender: TObject);
+begin
+  with MSQuery2 do begin
+    Close;
+    ParamByName('SDate').AsDateTime := DateTimePicker1.DateTime;
+    ParamByName('EDate').AsDateTime := DateTimePicker2.DateTime;
+    ParamByName('DepID').AsInteger  := DEPID;
+    Open;
+  end;
+  frxReport1.ShowReport;
+end;
+
+procedure TfrmOtchSPP.Button3Click(Sender: TObject);
+begin
+  with MSQuery2 do begin
+    Close;
+    ParamByName('SDate').AsDateTime:=DateTimePicker1.DateTime;
+    ParamByName('EDate').AsDateTime:=DateTimePicker2.DateTime;
+    ParamByName('DepID').AsInteger:=DEPID;
+    Open;
+  end;
+end;
+
+procedure TfrmOtchSPP.Button4Click(Sender: TObject);
+begin
+  with MSQuery1 do begin
+    Close;
+    ParamByName('DateS').AsDateTime:=DateTimePicker1.DateTime;
+    ParamByName('DateE').AsDateTime:=DateTimePicker2.DateTime;
+    ParamByName('DepID').AsInteger:=DEPID;
+    ParamByName('Task').AsInteger:=MSQuery2.FieldByName('TaskId').AsInteger;
+    Open;
+  end;
+  frxReport3.ShowReport;
+end;
+
+procedure TfrmOtchSPP.Button5Click(Sender: TObject);
+begin
+  with MSQuery1 do begin
+    Close;
+    ParamByName('DateS').AsDateTime:=DateTimePicker1.DateTime;
+    ParamByName('DateE').AsDateTime:=DateTimePicker2.DateTime;
+    ParamByName('DepID').AsInteger:=DEPID;
+    ParamByName('Task').AsInteger:=MSQuery2.FieldByName('TaskId').AsInteger;
+    Open;
+  end;
+  frxReport4.ShowReport;
+end;
+
+procedure TfrmOtchSPP.Button6Click(Sender: TObject);
+begin
+  with MSQuery3 do begin
+    Close;
+    ParamByName('SDate').AsDateTime := DateTimePicker1.DateTime;
+    ParamByName('EDate').AsDateTime := DateTimePicker2.DateTime;
+    ParamByName('DepID').AsInteger  := DEPID;
+    Open;
+  end;
+  frxReport5.ShowReport;
+end;
+
+procedure TfrmOtchSPP.Button7Click(Sender: TObject);
+begin
+  with MSQuery4 do begin
+    Close;
+    ParamByName('SDate').AsDateTime := DateTimePicker1.DateTime;
+    ParamByName('EDate').AsDateTime := DateTimePicker2.DateTime;
+    //ParamByName('DepID').AsInteger  := DEPID;
+    Open;
+  end;
+  frxReport6.ShowReport;
+end;
+
+procedure TfrmOtchSPP.DBLookupComboboxEh1Change(Sender: TObject);
+begin
+  DEPID := MSQ2.FieldByName('DepartmentID').AsInteger;
+  with MSQuery2 do begin
+    Close;
+    ParamByName('SDate').AsDateTime:=DateTimePicker1.DateTime;
+    ParamByName('EDate').AsDateTime:=DateTimePicker2.DateTime;
+    ParamByName('DepID').AsInteger:=DEPID;
+    Open;
+  end;
+end;
+
+procedure TfrmOtchSPP.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Hide;
+  Free;
+end;
+
+procedure TfrmOtchSPP.FormCreate(Sender: TObject);
+begin
+  DateTimePicker1.Date := Date-30;
+  DateTimePicker2.Date := Date;  
+
+  MSQ2 := TMSQuery.Create(nil);
+  MSQ2.Connection:=frmMain.MSConnection1;
+  MSQ2.Close;
+  MSQ2.SQL.Clear;
+
+  MSQ2.SQL.Add(' Select * ');
+  MSQ2.SQL.Add(' From viewDepartmentsForUserID ');
+
+  MSQ2.Open;
+
+  MSDS2 := TMSDataSource.Create(Nil);
+  MSDS2.DataSet := MSQ2;
+
+  DBLookupComboboxEh1.ListSource := MSDS2;
+  DBLookupComboboxEh1.ListField := 'DepartmentName';
+  DBLookupComboboxEh1.KeyField  := 'DepartmentID';
+end;
+
+procedure TfrmOtchSPP.FormResize(Sender: TObject);
+begin
+  DBGridEh1.Width := Width-18;
+  DBGridEh1.Height := Height-62-93;
+  DBGridEh1.Top := 62;
+  DBGridEh1.Left := 5;
+end;
+
+end.

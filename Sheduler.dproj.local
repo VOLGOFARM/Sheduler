@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.754,D:\DIMITRIUS\Программирование\Sheduler_v2\uRefTask.dfm=D:\DIMITRIUS\Программирование\Sheduler_v2\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.568,=D:\DIMITRIUS\Программирование\Sheduler_v2\uTaskTop10.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.794,D:\DIMITRIUS\Программирование\Sheduler_v2\uRepHron.dfm=D:\DIMITRIUS\Программирование\Sheduler_v2\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.789,=D:\DIMITRIUS\Программирование\Sheduler_v2\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.720,=D:\DIMITRIUS\Программирование\Sheduler_v2\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.794,=D:\DIMITRIUS\Программирование\Sheduler_v2\uOtchFIO.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.964,D:\DIMITRIUS\Программирование\Sheduler_v2\Sheduler.dproj=C:\Users\Polz_129_\Documents\RAD Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.779,D:\DIMITRIUS\Программирование\Sheduler_v2\uMovingwnd.pas=D:\DIMITRIUS\Программирование\Sheduler_v2\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.557,=D:\DIMITRIUS\Программирование\Sheduler_v2\uReference.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.191,=D:\DIMITRIUS\Программирование\Sheduler_v2\uAddTask.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.462,=C:\Users\Polz_129_\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.711,D:\DIMITRIUS\Программирование\Sheduler_v2\Unit1.dfm=D:\DIMITRIUS\Программирование\Sheduler_v2\uSettings.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.906,=D:\DIMITRIUS\Программирование\Sheduler_v2\uDivision.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.754,D:\DIMITRIUS\Программирование\Sheduler_v2\uRefTask.pas=D:\DIMITRIUS\Программирование\Sheduler_v2\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.794,D:\DIMITRIUS\Программирование\Sheduler_v2\uRepHron.pas=D:\DIMITRIUS\Программирование\Sheduler_v2\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.666,D:\DIMITRIUS\Программирование\Sheduler_v2\uMain.pas=C:\Users\Polz_129_\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.715,=D:\DIMITRIUS\Программирование\Sheduler_v2\uPosts.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.826,=D:\DIMITRIUS\Программирование\Sheduler_v2\uOtchSPP.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.263,=D:\DIMITRIUS\Программирование\Sheduler_v2\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.052,=D:\DIMITRIUS\Программирование\Sheduler_v2\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.711,D:\DIMITRIUS\Программирование\Sheduler_v2\Unit1.pas=D:\DIMITRIUS\Программирование\Sheduler_v2\uSettings.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.968,=D:\DIMITRIUS\Программирование\Sheduler_v2\uUsers.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.666,D:\DIMITRIUS\Программирование\Sheduler_v2\uMain.dfm=C:\Users\Polz_129_\Documents\RAD Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.045,=D:\DIMITRIUS\Программирование\Sheduler_v2\uCurators.pas</Transaction>
+  </Transactions>
+</BorlandProject>

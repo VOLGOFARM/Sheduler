@@ -1,0 +1,26 @@
+unit frameDivision;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, 
+  Dialogs, DB, DBAccess, MSAccess, MemDS, Grids, DBGridEh, GridsEh, ComCtrls,
+  ToolWin, ExtCtrls, DimTB, DBGridEhGrouping;
+
+type
+  TsprDepartments = class(TFrame)
+    DBGridEh1: TDBGridEh;
+    MSTable1: TMSTable;
+    MSDataSource1: TMSDataSource;
+    DBPanel1: TDBPanel;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+implementation
+
+{$R *.dfm}
+Uses Unit1;
+end.

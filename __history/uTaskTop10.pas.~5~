@@ -1,0 +1,180 @@
+unit TaskTop10;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, ExtCtrls, GridsEh, DBGridEh, StdCtrls, DB, DBAccess, MSAccess, MemDS,
+  DBGridEhGrouping;
+
+type
+  TfTaskTop10 = class(TForm)
+    DBGridEh1: TDBGridEh;
+    DBGridEh2: TDBGridEh;
+    Panel1: TPanel;
+    Button1: TButton;
+    MSQuery1: TMSQuery;
+    MSDataSource1: TMSDataSource;
+    MSDataSource2: TMSDataSource;
+    MSQuery1ID: TIntegerField;
+    MSQuery1NumPos: TIntegerField;
+    MSQuery1UserID: TIntegerField;
+    MSQuery1TaskName: TStringField;
+    MSQuery1TaskID: TIntegerField;
+    Button2: TButton;
+    Button3: TButton;
+    Button4: TButton;
+    Button5: TButton;
+    Button6: TButton;
+    procedure Button6Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
+    procedure FormResize(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  fTaskTop10: TfTaskTop10;
+
+implementation
+
+{$R *.dfm}
+
+USES uMain;
+
+procedure TfTaskTop10.Button1Click(Sender: TObject);
+var
+  MSQ : TMSQuery;
+begin
+  MSQ := TMSQuery.Create(Nil);
+  MSQ.Connection := fMain.MSCon;
+
+  MSQ.Close;
+  MSQ.SQL.Clear;
+  MSQ.SQL.Add('dbo.procTop10 :UserID, :StartD, :EndD');
+  MSQ.ParamByName('UserID').AsInteger := fMain.CurrentUser;
+  MSQ.ParamByName('StartD').AsDateTime := Date-7;
+  MSQ.ParamByName('EndD').AsDateTime := Date;
+  MSQ.Execute;
+  MSQ.Free;
+  MSQuery1.Refresh;
+end;
+
+procedure TfTaskTop10.Button2Click(Sender: TObject);
+begin
+  MSQuery1.Refresh;
+end;
+
+procedure TfTaskTop10.Button3Click(Sender: TObject);
+var
+  MSQ : TMSQuery;
+begin
+  MSQ := TMSQuery.Create(Nil);
+  MSQ.Connection := fMain.MSCon;
+
+  MSQ.Close;
+  MSQ.SQL.Clear;
+  MSQ.SQL.Add(' EXEC dbo.procUpDownTask :UserID, :NumPos, :UpDown ');
+  MSQ.ParamByName('UserID').AsInteger := fMain.CurrentUser;
+  MSQ.ParamByName('NumPos').AsInteger := MSQuery1.FieldByName('NumPos').AsInteger;
+  MSQ.ParamByName('UpDown').AsBoolean := True; // true - вверх
+  MSQ.Execute;
+  MSQ.Free;
+  MSQuery1.Refresh;
+  MSQuery1.RecNo := MSQuery1.FieldByName('NumPos').AsInteger - 1;
+end;
+
+procedure TfTaskTop10.Button4Click(Sender: TObject);
+var
+  MSQ : TMSQuery;
+begin
+  MSQ := TMSQuery.Create(Nil);
+  MSQ.Connection := fMain.MSCon;
+
+  MSQ.Close;
+  MSQ.SQL.Clear;
+  MSQ.SQL.Add('EXEC dbo.procUpDownTask :UserID, :NumPos, :UpDown');
+  MSQ.ParamByName('UserID').AsInteger := fMain.CurrentUser;
+  MSQ.ParamByName('NumPos').AsInteger := MSQuery1.FieldByName('NumPos').AsInteger;
+  MSQ.ParamByName('UpDown').AsBoolean := False; // true - вверх
+  MSQ.Execute;
+
+  MSQ.Free;
+  MSQuery1.Refresh;
+  MSQuery1.RecNo := MSQuery1.FieldByName('NumPos').AsInteger + 1;
+end;
+
+procedure TfTaskTop10.Button5Click(Sender: TObject);
+var
+  MSQ : TMSQuery;
+begin
+  MSQ := TMSQuery.Create(Nil);
+  MSQ.Connection := fMain.MSCon;
+
+  MSQ.Close;
+  MSQ.SQL.Clear;
+  MSQ.SQL.Add('UPDATE TaskListTop10 SET TaskID = :TaskID WHERE UserID = :UserID and NumPos = :NumPos');
+  MSQ.ParamByName('TaskID').AsInteger :=  fMain.MSQ.FieldByName('ID').AsInteger;
+  MSQ.ParamByName('UserID').AsInteger := fMain.CurrentUser;
+  MSQ.ParamByName('NumPos').AsInteger := MSQuery1.FieldByName('NumPos').AsInteger;
+  MSQ.Execute;
+
+  MSQ.Free;
+  MSQuery1.Refresh;
+end;
+
+procedure TfTaskTop10.Button6Click(Sender: TObject);
+var
+  MSQ, MSQ2 : TMSQuery;
+begin
+  MSQ := TMSQuery.Create(Nil);
+  MSQ.Connection := fMain.MSCon;
+
+  MSQ2 := TMSQuery.Create(Nil);
+  MSQ2.Connection := fMain.MSCon;
+
+  MSQ2.Close;
+  MSQ2.SQL.Clear;
+  MSQ2.SQL.Add('SELECT max(NumPos) as NumPos from TaskListTop10 where userId = :UserId');
+  MSQ2.ParamByName('UserId').AsInteger := fMain.CurrentUser;
+  MSQ2.Open;
+
+  if MSQ2.FieldByName('NumPos').AsInteger < 10 then begin
+    MSQ.Close;
+    MSQ.SQL.Clear;
+    MSQ.SQL.Add('INSERT INTO TaskListTop10 (TaskID, UserID, NumPos) VALUES (:TaskID, :UserID, :NumPos) ');
+    MSQ.ParamByName('TaskID').AsInteger :=  fMain.MSQ.FieldByName('ID').AsInteger;
+    MSQ.ParamByName('UserID').AsInteger := fMain.CurrentUser;
+    MSQ.ParamByName('NumPos').AsInteger := MSQ2.FieldByName('NumPos').AsInteger + 1;
+    MSQ.Execute;
+  end;
+
+  MSQ.Free;
+  MSQ2.Free;
+  MSQuery1.Refresh;
+end;
+
+procedure TfTaskTop10.FormActivate(Sender: TObject);
+begin
+  with MSQuery1 do begin
+    Close;
+    Connection := fMain.msCon;
+    Open;
+    Refresh;
+  end;
+end;
+
+procedure TfTaskTop10.FormResize(Sender: TObject);
+begin
+  DBGridEh1.Width := fTaskTop10.Width div 2 - 34;
+  DBGridEh2.Width := fTaskTop10.Width div 2 - 34;
+end;
+
+end.

@@ -1,0 +1,60 @@
+unit uReference;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, uUsers;
+
+type
+  TfrmReference = class(TForm)
+    sprUsers1: TsprUsers;
+    procedure FormResize(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmReference: TfrmReference;
+
+implementation
+
+{$R *.dfm}
+
+uses
+  uMain;
+
+procedure TfrmReference.FormActivate(Sender: TObject);
+begin
+  if fMain.msCon.Connected then
+  begin
+    with sprUsers1.MSQuery1 do
+    begin
+      Close;
+      Connection := fMain.msCon;
+      Open;
+    end;
+    with sprUsers1.Departments do
+    begin
+      Close;
+      Connection := fMain.msCon;
+      Open;
+    end;
+    with sprUsers1.Posts do
+    begin
+      Close;
+      Connection := fMain.msCon;
+      Open;
+    end;
+  end;
+end;
+
+procedure TfrmReference.FormResize(Sender: TObject);
+begin
+  // sprTaskList1.DBGridEh1.Height:= frmReference.Height - 70;
+end;
+
+end.
